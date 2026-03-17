@@ -1,6 +1,7 @@
 from typing import Annotated
 from datetime import date, datetime # Import datetime for parsing
 
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, create_engine, select
 
@@ -34,8 +35,21 @@ def get_session():
 
 SessionDep = Annotated[Session, Depends(get_session)]
 
+
 app = FastAPI()
 
+# TODO: Make this more granular
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.on_event("startup")
 def on_startup():
@@ -43,14 +57,14 @@ def on_startup():
 
 
 # ---- BEGIN LOCATIONS ----
-@app.post("/locations/add")
+@app.post("/locations/", response_model=Location)
 def create_location(location: Location, session: SessionDep) -> Location:
     session.add(location)
     session.commit()
     session.refresh(location)
     return location
 
-@app.get("/locations/")
+@app.get("/locations/", response_model=list[Location])
 def read_locations(
     session: SessionDep,
     offset: int = 0,
@@ -77,14 +91,14 @@ def delete_location(location_id: int, session: SessionDep):
 
 # ---- END LOCATION ----
 # ---- BEGIN PRODUCT ----
-@app.post("/products/add")
+@app.post("/products/", response_model=Product)
 def create_product(product: Product, session: SessionDep) -> Product:
     session.add(product)
     session.commit()
     session.refresh(product)
     return product
 
-@app.get("/products/")
+@app.get("/products/", response_model=list[Product])
 def read_products(
     session: SessionDep,
     offset: int = 0,
@@ -141,6 +155,10 @@ def read_inventory_item(inventory_item_id: int, session: SessionDep) -> Inventor
         raise HTTPException(status_code=404, detail="Inventory item not found")
     return inventory_item
 
+@app.get("/inventory_items/by_product/{product_id}", response_model=list[InventoryItem])
+def read_inventory_by_product(product_id: str, session: SessionDep) -> list[InventoryItem]:
+    inventory_items = session.exec(select(InventoryItem).where(InventoryItem.product_id == product_id)).all()
+    return inventory_items
 
 @app.delete("/inventory_items/{inventory_item_id}")
 def delete_inventory_item(inventory_item_id: int, session: SessionDep):

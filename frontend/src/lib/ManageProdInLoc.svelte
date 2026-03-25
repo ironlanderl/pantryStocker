@@ -1,6 +1,7 @@
 <script>
   import { onMount } from "svelte";
   import { appState } from "./appState.svelte";
+  import ProdInLoc from "./ProdInLoc.svelte";
 
   let data = $state([]);
 
@@ -32,7 +33,12 @@
 
 {#if data.length > 0}
   {#each data as d}
-    {d.id}-{d.product_id}-{d.location_id}-{d.expiration_date}
+    <ProdInLoc
+      assoc_id={d.id}
+      product_id={d.product_id}
+      location_id={d.location_id}
+      expiration_date={d.expiration_date}
+    />
     <br />
   {/each}
 {:else}

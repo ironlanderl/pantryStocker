@@ -1,9 +1,14 @@
 <script>
+  import { onMount } from "svelte";
   import Counter from "./lib/Counter.svelte";
   import Reader from "./lib/Reader.svelte";
   import AddNewForm from "./lib/AddNewForm.svelte";
   import { appState, Operation } from "./lib/appState.svelte";
-  import Manage from "./lib/Manage.svelte";
+  import ManageProdInLoc from "./lib/ManageProdInLoc.svelte";
+
+  onMount(() => {
+    appState.fetchLocations();
+  });
 
   async function test_get_data() {
     let url = "http://192.168.178.26:8000/products/" + appState.barcode;
@@ -51,16 +56,13 @@ Current status: {appState.operation}
       <button onclick={() => appState.setOperation(Operation.Scanning)}>
         Scan Again
       </button>
+      <button onclick={test_get_data}> Get Data </button>
     </div>
   {:else if appState.operation === Operation.AddNew}
     <AddNewForm />
   {:else if appState.operation === Operation.Manage}
-    <Manage />
+    <ManageProdInLoc />
   {/if}
-
-  <div class="controls">
-    <button onclick={test_get_data}> Test API </button>
-  </div>
 </section>
 
 <style>

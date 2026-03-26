@@ -11,7 +11,7 @@
   });
 
   async function test_get_data() {
-    let url = "http://192.168.178.26:8000/products/" + appState.barcode;
+    let url = `http://${appState.endpoint}/products/` + appState.barcode;
     try {
       const response = await fetch(url);
 

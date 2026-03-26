@@ -12,6 +12,7 @@ class Product {
 }
 
 class AppState {
+    endpoint = "127.0.0.1:8000"
     operation = $state(Operation.Scanning);
     barcode = $state("");
     product = $state(new Product);
@@ -36,9 +37,10 @@ class AppState {
 
     async fetchLocations() {
         try {
-            const response = await fetch("http://192.168.178.26:8000/locations/");
+            const response = await fetch(`http://${this.endpoint}/locations/`);
             if (response.ok) {
                 this.locations = await response.json();
+                console.log(this.locations);
             }
         } catch (error) {
             console.error("Failed to fetch locations:", error);

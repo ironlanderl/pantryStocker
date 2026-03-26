@@ -1,14 +1,17 @@
+from pprint import pprint
 from typing import Annotated
-from datetime import date, datetime # Import datetime for parsing
+from datetime import date, datetime
 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends, FastAPI, HTTPException, Query
 from sqlmodel import Field, Session, SQLModel, create_engine, select
+from sqlalchemy import update
 
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 
 from backend.sql_models import Profile, Product, Location, InventoryItem
+from backend.other_models import MoveItem
 
 
 sqlite_file_name = "database.db"
@@ -136,6 +139,18 @@ def create_inventory_item(inventory_item: InventoryItem, session: SessionDep) ->
     session.commit()
     session.refresh(inventory_item)
     return inventory_item
+
+@app.post("/inventory_items/move")
+def move_inventory_item(move_model: MoveItem, session: SessionDep):
+    # Use explicit UPDATE statement to ensure the change is persisted
+    stmt = (
+        update(InventoryItem)
+        .where(InventoryItem.id == move_model.assoc_id)
+        .values(location_id=move_model.location_id)
+    )
+    session.exec(stmt)
+    session.commit()
+    return {"ok": True}
 
 
 @app.get("/inventory_items/", response_model=list[InventoryItem])

@@ -6,7 +6,7 @@
     let product_desc = document.getElementById("product_desc").value;
 
     try {
-      let response = await fetch("http://192.168.178.26:8000/products", {
+      let response = await fetch(`http://${appState.endpoint}/products`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

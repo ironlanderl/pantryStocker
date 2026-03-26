@@ -8,7 +8,7 @@
   async function get_data() {
     try {
       let response = await fetch(
-        "http://192.168.178.26:8000/inventory_items/by_product/" +
+        `http://${appState.endpoint}/inventory_items/by_product/` +
           appState.product.id,
       );
 
@@ -32,15 +32,29 @@
 </script>
 
 {#if data.length > 0}
-  {#each data as d}
-    <ProdInLoc
-      assoc_id={d.id}
-      product_id={d.product_id}
-      location_id={d.location_id}
-      expiration_date={d.expiration_date}
-    />
-    <br />
-  {/each}
+  <table style="border: 2px solid rgb(140 140 140);">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Prodotto</th>
+        <th>Posizione</th>
+        <th>Data Scadenza</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {#each data as d}
+        <tr>
+          <ProdInLoc
+            assoc_id={d.id}
+            product_id={d.product_id}
+            location_id={d.location_id}
+            expiration_date={d.expiration_date}
+          />
+        </tr>
+      {/each}
+    </tbody>
+  </table>
 {:else}
   Data is loading
 {/if}

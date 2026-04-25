@@ -1,6 +1,7 @@
 <script>
   import { appState } from "./appState.svelte";
-  let { assoc_id, product_id, location_id, expiration_date } = $props();
+  let { assoc_id, product_id, location_id, expiration_date, update_func } =
+    $props();
 
   let location_name = $derived(
     appState.locations.find((l) => l.id === location_id)?.name || "Unknown",
@@ -35,11 +36,35 @@
       console.error(error.message);
     }
   }
+
+  async function removeItem() {
+    if (confirm("Sei sicuro di voler eliminare?") == true) {
+      try {
+        let response = await fetch(
+          `http://${appState.endpoint}/inventory_items/${assoc_id}`,
+          {
+            method: "DELETE",
+          },
+        );
+
+        if (response.ok) {
+          update_func();
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error(`Response status: ${response.status}`);
+        }
+        // …
+      } catch (error) {
+        console.error(error.message);
+      }
+    }
+  }
 </script>
 
 <!-- TODO: Add a delete button. Maybe also a notes section? -->
 <td>{assoc_id}</td>
-<td>{appState.product.name}</td>
 <td>
   <select
     name="location"
@@ -56,3 +81,4 @@
   </select>
 </td>
 <td>{expiration_date}</td>
+<td><button onclick={removeItem}>Elimina</button></td>

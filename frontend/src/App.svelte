@@ -5,6 +5,7 @@
   import AddNewForm from "./lib/AddNewForm.svelte";
   import { appState, Operation } from "./lib/appState.svelte";
   import ManageProdInLoc from "./lib/ManageProdInLoc.svelte";
+  import app from "./main";
 
   onMount(() => {
     appState.fetchLocations();
@@ -39,10 +40,26 @@
   }
 
   function skip_qr() {
-    appState.setBarcode("1000");
+    appState.setBarcode("2000");
     appState.setOperation(Operation.Lookup);
   }
+
+  function go_home() {
+    appState.setOperation(Operation.Scanning);
+  }
 </script>
+
+<header>
+  <div
+    style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-evenly; width: 100%;"
+  >
+    <button onclick={go_home}>Scanning</button>
+
+    <!--    {#each Object.keys(Operation) as operation}
+      <div style="border: 1px solid white;">{operation}</div>
+    {/each} -->
+  </div>
+</header>
 
 Current status: {appState.operation}
 

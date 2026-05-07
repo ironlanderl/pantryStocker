@@ -66,7 +66,9 @@
             <button
               onclick={() => {
                 appState.setBarcode(d.id);
-                appState.operation = Operation.Lookup;
+                appState.setProductName(d.name);
+                appState.setProductDesc(d.description);
+                appState.operation = Operation.Manage;
               }}>Seleziona</button
             >
           </td>

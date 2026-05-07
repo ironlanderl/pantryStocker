@@ -117,6 +117,14 @@ def read_product(product_id: str, session: SessionDep) -> Product:
         raise HTTPException(status_code=404, detail="product not found")
     return product
 
+# TODO: IMPLEMENT FUZZY SEARCH
+@app.get("/products/search/{product_name}")
+def read_product(product_name: str, session: SessionDep) -> list[Product]:
+    product = session.exec(select(Product).where(Product.name == product_name)).all()
+    if not product:
+        raise HTTPException(status_code=404, detail="product not found")
+    return product
+
 @app.delete("/products/{product_id}")
 def delete_product(product_id: str, session: SessionDep):
     product = session.get(Product, product_id)

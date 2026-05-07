@@ -1,5 +1,7 @@
 export enum Operation {
+    Menu = "main_menu",
     Scanning = "scanning",
+    Search = "search_product",
     Lookup = "lookup",
     AddNew = "add_new_product",
     Manage = "manage_existing",
@@ -13,7 +15,7 @@ class Product {
 
 class AppState {
     endpoint = "127.0.0.1:8000"
-    operation = $state(Operation.Scanning);
+    operation = $state(Operation.Menu);
     barcode = $state("");
     barcodeType = $state("");
     product = $state(new Product);

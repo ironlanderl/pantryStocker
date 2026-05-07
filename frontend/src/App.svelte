@@ -6,6 +6,7 @@
   import { appState, Operation } from "./lib/appState.svelte";
   import ManageProdInLoc from "./lib/ManageProdInLoc.svelte";
   import app from "./main";
+  import SearchProduct from "./lib/SearchProduct.svelte";
 
   onMount(() => {
     appState.fetchLocations();
@@ -100,7 +101,14 @@
 Current status: {appState.operation}
 
 <section id="center">
-  {#if appState.operation === Operation.Scanning}
+  {#if appState.operation === Operation.Menu}
+    <button onclick={() => appState.setOperation(Operation.Scanning)}>
+      Scan Code
+    </button>
+    <button onclick={() => appState.setOperation(Operation.Search)}>
+      Search Product
+    </button>
+  {:else if appState.operation === Operation.Scanning}
     <button onclick={() => skip_qr()}> Skip to management </button>
     <Reader />
   {:else if appState.operation === Operation.Lookup}
@@ -115,6 +123,8 @@ Current status: {appState.operation}
     <AddNewForm />
   {:else if appState.operation === Operation.Manage}
     <ManageProdInLoc />
+  {:else if appState.operation === Operation.Search}
+    <SearchProduct />
   {/if}
 </section>
 

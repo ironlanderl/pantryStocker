@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import { onMount } from "svelte";
   import Counter from "./lib/Counter.svelte";
   import Reader from "./lib/Reader.svelte";
@@ -47,6 +47,42 @@
   function go_home() {
     appState.setOperation(Operation.Scanning);
   }
+
+  function formatBarcode(): string {
+    let type = appState.barcodeType;
+    let code = appState.barcode;
+    console.log(type);
+    console.log(code);
+    switch (type) {
+      case "ean_13":
+        // EAN-13: X-XXXXXX-XXXXXX (1-6-6)
+        if (code.length === 13) {
+          return `${code[0]}-${code.slice(1, 7)}-${code.slice(7, 13)}`;
+        }
+        return code;
+      case "ean_8":
+        // EAN-8: XXXX-XXXX (6-2)
+        if (code.length === 8) {
+          return `${code.slice(0, 4)}-${code.slice(4, 8)}`;
+        }
+        return code;
+      case "upc_a":
+        // UPC-A: X-XXXXX-XXXXX-X (1-6-5)
+        if (code.length === 12) {
+          return `${code[0]}-${code.slice(1, 6)}-${code.slice(6, 11)}-${code[11]}`;
+        }
+        return code;
+      case "upc_e":
+        // UPC-E: XXXXXX-XX (6-2)
+        if (code.length >= 6) {
+          return `${code[0]}-${code.slice(1, 7)}-${code[7]}`;
+        }
+        return code;
+      default:
+        // Code 128, Code 39, Codabar, Interleaved 2of5 — no grouping
+        return code;
+    }
+  }
 </script>
 
 <header>
@@ -69,7 +105,7 @@ Current status: {appState.operation}
     <Reader />
   {:else if appState.operation === Operation.Lookup}
     <div class="lookup-view">
-      <p>The code we got is: <strong>{appState.barcode}</strong></p>
+      <p>The code we got is: <strong>{formatBarcode()}</strong></p>
       <button onclick={() => appState.setOperation(Operation.Scanning)}>
         Scan Again
       </button>

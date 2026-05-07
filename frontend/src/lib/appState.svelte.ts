@@ -15,6 +15,7 @@ class AppState {
     endpoint = "127.0.0.1:8000"
     operation = $state(Operation.Scanning);
     barcode = $state("");
+    barcodeType = $state("");
     product = $state(new Product);
     locations = $state([]);
 
@@ -30,8 +31,9 @@ class AppState {
         this.operation = op;
     }
 
-    setBarcode(code: string) {
+    setBarcode(code: string, type: string = "") {
         this.barcode = code;
+        this.barcodeType = type;
         this.product.id = code;
     }
 

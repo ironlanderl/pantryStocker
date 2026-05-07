@@ -7,6 +7,6 @@ export default defineConfig({
   plugins: [svelte(), basicSSL()],
   server: {
     host: true,
-    https: false
+    https: true
   }
 })

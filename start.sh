@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+sudo systemctl stop firewalld # This is bad. TODO: Should just allow the ports
+
+
 tmux new-window
 tmux rename-window server
 tmux send-keys 'fc -p' C-m # sets private history mode?

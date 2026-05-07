@@ -33,9 +33,25 @@
   }
 </script>
 
-<div>
-  <input type="text" name="id" value={appState.barcode} />
-  <input type="text" name="name" id="product_name" value="" />
-  <input type="text" name="description" id="product_desc" value="" />
-  <button type="button" onclick={() => sendData()}> Send data </button>
+<div style="display: flex; flex-direction: row; gap: 10px;">
+  <div class="input-group">
+    <label for="id">Id Prodotto</label>
+    <input type="text" name="id" value={appState.barcode} />
+  </div>
+  <div class="input-group">
+    <label for="product_name">Nome Prodotto</label>
+    <input type="text" name="name" id="product_name" value="" />
+  </div>
+  <div class="input-group">
+    <label for="product_desc">Descrizione Prodotto</label>
+    <input type="text" name="description" id="product_desc" value="" />
+  </div>
 </div>
+<button type="button" onclick={() => sendData()}> Send data </button>
+
+<style>
+  .input-group {
+    display: flex;
+    flex-direction: column;
+  }
+</style>

@@ -46,7 +46,7 @@
   }
 
   function go_home() {
-    appState.setOperation(Operation.Scanning);
+    appState.setOperation(Operation.Menu);
   }
 
   function formatBarcode(): string {
@@ -90,7 +90,7 @@
   <div
     style="display: flex; flex-direction: row; flex-wrap: nowrap; justify-content: space-evenly; width: 100%;"
   >
-    <button onclick={go_home}>Scanning</button>
+    <button onclick={go_home}>Home</button>
 
     <!--    {#each Object.keys(Operation) as operation}
       <div style="border: 1px solid white;">{operation}</div>

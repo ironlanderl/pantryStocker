@@ -66,44 +66,40 @@
   });
 </script>
 
-{#if data.length > 0}
-  <h1>Gestisci '{appState.product.name}'</h1>
-  <table style="border: 2px solid rgb(140 140 140);">
-    <thead>
-      <tr>
-        <th>Id</th>
-        <th>Posizione</th>
-        <th>Data Scadenza</th>
-        <th>Operazioni</th>
-      </tr>
-    </thead>
+<h1>Gestisci '{appState.product.name}'</h1>
+<table style="border: 2px solid rgb(140 140 140);">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Posizione</th>
+      <th>Data Scadenza</th>
+      <th>Operazioni</th>
+    </tr>
+  </thead>
 
-    <tbody>
-      {#each data as d}
-        <tr>
-          <ProdInLoc
-            assoc_id={d.id}
-            product_id={d.product_id}
-            location_id={d.location_id}
-            expiration_date={d.expiration_date}
-            update_func={() => get_data()}
-          />
-        </tr>
-      {/each}
+  <tbody>
+    {#each data as d}
       <tr>
-        <td></td>
-        <td>
-          <select name="location" id="cmb_location">
-            {#each appState.locations as location}
-              <option value={location.id}>{location.name} </option>
-            {/each}
-          </select>
-        </td>
-        <td><input type="text" id="txt_expire" /></td>
-        <td><button onclick={sendData}>Aggiungi</button></td>
+        <ProdInLoc
+          assoc_id={d.id}
+          product_id={d.product_id}
+          location_id={d.location_id}
+          expiration_date={d.expiration_date}
+          update_func={() => get_data()}
+        />
       </tr>
-    </tbody>
-  </table>
-{:else}
-  Data is loading
-{/if}
+    {/each}
+    <tr>
+      <td></td>
+      <td>
+        <select name="location" id="cmb_location">
+          {#each appState.locations as location}
+            <option value={location.id}>{location.name} </option>
+          {/each}
+        </select>
+      </td>
+      <td><input type="text" id="txt_expire" /></td>
+      <td><button onclick={sendData}>Aggiungi</button></td>
+    </tr>
+  </tbody>
+</table>

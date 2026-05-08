@@ -187,6 +187,8 @@ def read_inventory_item(inventory_item_id: int, session: SessionDep) -> Inventor
 @app.get("/inventory_items/by_product/{product_id}", response_model=list[InventoryItem])
 def read_inventory_by_product(product_id: str, session: SessionDep) -> list[InventoryItem]:
     inventory_items = session.exec(select(InventoryItem).where(InventoryItem.product_id == product_id)).all()
+    if not inventory_items:
+        raise HTTPException(status_code=404, detail="product not found")
     return inventory_items
 
 @app.delete("/inventory_items/{inventory_item_id}")

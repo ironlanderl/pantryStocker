@@ -13,6 +13,7 @@ from sqlalchemy.engine import Engine
 from backend.sql_models import Profile, Product, Location, InventoryItem
 from backend.other_models import MoveItem
 
+from rapidfuzz import process
 
 sqlite_file_name = "database.db"
 sqlite_url = f"sqlite:///{sqlite_file_name}"
@@ -117,13 +118,18 @@ def read_product(product_id: str, session: SessionDep) -> Product:
         raise HTTPException(status_code=404, detail="product not found")
     return product
 
-# TODO: IMPLEMENT FUZZY SEARCH
-@app.get("/products/search/{product_name}")
-def read_product(product_name: str, session: SessionDep) -> list[Product]:
-    product = session.exec(select(Product).where(Product.name == product_name)).all()
-    if not product:
-        raise HTTPException(status_code=404, detail="product not found")
-    return product
+@app.get("/products/search/{product_name}", response_model=list[Product])
+def search_products(product_name: str, session: SessionDep) -> list[Product]:
+    products = session.exec(select(Product)).all()
+    p_names = [p.name for p in products]
+    res = process.extract(product_name, p_names, limit=20)
+
+    matched_products = []
+    for item in res:
+        idx = item[2]
+        matched_products.append(products[idx])
+
+    return matched_products
 
 @app.delete("/products/{product_id}")
 def delete_product(product_id: str, session: SessionDep):

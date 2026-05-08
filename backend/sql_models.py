@@ -14,7 +14,7 @@ class Profile(SQLModel, table=True):
 
 class Product(SQLModel, table=True):
     id: Optional[str] = Field(default=None, primary_key=True) # id is string in legacy model
-    name: str
+    name: str = Field(unique=True)
     description: str = Field(default="")
 
     inventory_items: List["InventoryItem"] = Relationship(back_populates="item")
